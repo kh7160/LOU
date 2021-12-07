@@ -52,10 +52,14 @@ def RSI(df, end_date, window=14, adjust=False):
     return RSI
 
 if __name__ == '__main__':
-    target = 'LABU'
-    start_date = datetime.datetime(2021,2,1)
-    end_date = datetime.datetime.now()
+    target = 'FNGU'
     rsi_df = yf.download(target, end=datetime.datetime.now()) # rsi용 데이터 전체 다운로드
+    first_date = pd.to_datetime(rsi_df.index, format="%Y-%m-%d, %H:%M:%S")[0]
+    print(first_date)
+    start_date = datetime.datetime(2021,11,29)
+    end_date = datetime.datetime.now()
+    # end_date = datetime.datetime(2021,6,28)
+    # df = rsi_df[first_date:end_date] # 테스트 기간용 데이터
     df = rsi_df[start_date:end_date] # 테스트 기간용 데이터
     df['Datetime'] = pd.to_datetime(df.index, format="%Y-%m-%d, %H:%M:%S")
     close_price_df = df['Close'].values  # 종가
@@ -64,7 +68,7 @@ if __name__ == '__main__':
     for i in range(len(df)):
         close_price = round(close_price_df[i], 4) # 종가
         high_price = round(high_price_df[i], 4) # 고가
-        rsi_end_date = df['Datetime'][i]
+        rsi_end_date = df['Datetime'][i] # 매수용 RSI 계산날짜
         buy_able_cnt = math.floor(ca_per_day / close_price)  # 매수 가능 숫자(loc 주문이어서 종가 기준)
         loc_avg_cnt = math.ceil(buy_able_cnt / 2) # loc평단매수개수
         loc_high_cnt = buy_able_cnt - loc_avg_cnt # loc큰수매수개수
@@ -75,6 +79,9 @@ if __name__ == '__main__':
         if total_cnt == 0: # 첫회는 무조건 매수
             print('================== 첫회는 무조건 매수 ==================')
             rsi = round(RSI(rsi_df, rsi_end_date), 2) # 매수용 RSI 계산
+            if (rsi.empty): # 첫상장날의 경우 rsi계산 불가
+                continue
+
             if rsi[-1] > const_LOU_dict[target]:
                 print('권장 RSI를 초과하기 때문에 매수를 추천하지 않습니다.')
                 print('날짜 : {}, rsi : {}, 권장 rsi : {}'.format(rsi_end_date, rsi[-1], const_LOU_dict[target]))
@@ -134,7 +141,7 @@ if __name__ == '__main__':
             total_cnt = 0 # 회차 리셋
 
         if (close_price <= avg_buy_cost) and loc_avg_cnt != 0: # 종가 <= 평단가(loc평단매수시 매수 조건)
-            print('================== loc 평단매수 발생(종가>평단가) ==================')
+            print('================== loc 평단매수 발생(종가 <= 평단가) ==================')
             day_buy_amt = round(loc_avg_cnt * close_price, 4) # 당일 매수
             total_buy_amt += day_buy_amt # 총매수금액 계산
             total_buy_cnt += loc_avg_cnt # 총매수개수 계산
@@ -143,7 +150,7 @@ if __name__ == '__main__':
             print("회차 : {}, 매수금액 : {}, 총매수금액 : {}, 총매수개수 : {}, 총예수금 : {}".format(total_cnt, day_buy_amt, total_buy_amt, total_buy_cnt, round(total_ca, 4)))
 
         if (close_price <= avg_buy_cost * 1.1) and loc_high_cnt != 0: # 종가 <= 평단가 * 1.1
-            print('================== loc 큰수매수 발생(종가 < 평단가 * 1.1) ==================')
+            print('================== loc 큰수매수 발생(종가 <= 평단가 * 1.1) ==================')
             day_buy_amt = round(loc_high_cnt * close_price, 4)
             total_buy_amt += day_buy_amt # 총매수금액 계산
             total_buy_cnt += loc_high_cnt # 총매수개수 계산
