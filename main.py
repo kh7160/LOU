@@ -52,11 +52,11 @@ def RSI(df, end_date, window=14, adjust=False):
     return RSI
 
 if __name__ == '__main__':
-    target = 'FNGU'
+    target = 'LABU'
     rsi_df = yf.download(target, end=datetime.datetime.now()) # rsi용 데이터 전체 다운로드
     first_date = pd.to_datetime(rsi_df.index, format="%Y-%m-%d, %H:%M:%S")[0]
     print(first_date)
-    start_date = datetime.datetime(2021,11,29)
+    start_date = datetime.datetime(2021,2,1)
     end_date = datetime.datetime.now()
     # end_date = datetime.datetime(2021,6,28)
     # df = rsi_df[first_date:end_date] # 테스트 기간용 데이터
@@ -106,27 +106,7 @@ if __name__ == '__main__':
             cnt_40 += 1 # 40회 소진 횟수
             if total_ca < init_ca:
                 exit(-1)
-
-            # profit_rate = round((close_price - avg_buy_cost) / avg_buy_cost, 2)
-            # if profit_rate >= -10: # 수익률 -10% 이상일 경우 손절
-            #     day_sel_amt = round(close_price * total_buy_cnt, 4)  # 종가 * 총개수
-            #     total_ca += day_sel_amt # 예수금 계산
-            #     print("회차 : {}, 매도금액 : {}, 총매수금액 : {}, 총매수개수 : {}, 총예수금 : {}\n".format(total_cnt, day_sel_amt,
-            #                                                                            total_buy_amt, total_buy_cnt,
-            #                                                                            round(total_ca, 4)))
-            #     total_buy_amt = 0 # 0 리셋
-            #     total_buy_cnt = 0 # 0 리셋
-            #     total_cnt = 0 # 회차 리셋
-            #     sell_cnt += 1  # 매도 횟수
-            #     cnt_40 += 1 # 40회 소진 횟수
-            # else: # 수익률 -10% 이하일 경우 영혼법
-            #     exit(-1) # 영혼법 구현을... 어떻게?
-            #     if total_ca > init_ca:
-            #         print('총예수금 : {}, 초기예수금 : {}'.format(total_ca, init_ca))
-            #         continue
-            #     else:
-            #         print('※※※※※※※※※※※※※※ 예수금 부족 ※※※※※※※※※※※※※※')
-            #         exit(-1)
+            continue
 
         if high_price >= sell_goal_cost: # 고가 > 평단가 * 1.1
             print('@@@@@@@@@@@@@@@@@@ 매도 발생(고가>평단가 * 1.1) @@@@@@@@@@@@@@@@@@')
