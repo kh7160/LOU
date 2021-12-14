@@ -65,9 +65,13 @@ if __name__ == '__main__':
                 v = pool
                 cnt = math.floor(pool / close_price)  # 수량
                 pool -= round(decimal.Decimal(close_price * cnt), 2)
+                inc_rate = get_next_inc_rate()
+                print('상승률 : {}'.format(inc_rate))
+            else:
+                inc_rate = get_next_inc_rate()
+                print('상승률 : {}'.format(inc_rate))
+                v = round((v * inc_rate), 2)
 
-            inc_rate = get_next_inc_rate()
-            print('상승률 : {}'.format(inc_rate))
             min_v = round((v * decimal.Decimal(0.8)), 2)
             max_v = round((v * decimal.Decimal(1.25)), 2)
             print('v : {}, min_v : {}, max_v : {}'.format(v, min_v, max_v))
