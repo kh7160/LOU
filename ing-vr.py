@@ -45,10 +45,10 @@ def get_next_inc_rate():
     else:
         return round(decimal.Decimal(1.001), 3)
 
-# 적립식 VR
+# 거치식 VR
 if __name__ == '__main__':
     target = 'TQQQ'
-    start_date = datetime.datetime(2010, 1, 1)
+    start_date = datetime.datetime(2020, 1, 1)
     end_date = datetime.datetime.now()
     # end_date = datetime.datetime(2021,10,8)
     df = fdr.DataReader(symbol='TQQQ', start=start_date, end=end_date)
