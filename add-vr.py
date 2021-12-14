@@ -49,7 +49,7 @@ def get_next_inc_rate():
 if __name__ == '__main__':
     target = 'TQQQ'
     add_pool = 250
-    start_date = datetime.datetime(2016, 1, 1)
+    start_date = datetime.datetime(2010, 1, 1)
     end_date = datetime.datetime.now()
     # end_date = datetime.datetime(2021,10,8)
     df = fdr.DataReader(symbol='TQQQ', start=start_date, end=end_date)
