@@ -48,9 +48,9 @@ def get_next_inc_rate():
 # 거치식 VR
 if __name__ == '__main__':
     target = 'TQQQ'
-    start_date = datetime.datetime(2020, 1, 1)
-    end_date = datetime.datetime.now()
-    # end_date = datetime.datetime(2021,10,8)
+    start_date = datetime.datetime(2018, 1, 1)
+    # end_date = datetime.datetime.now()
+    end_date = datetime.datetime(2018,12,31)
     df = fdr.DataReader(symbol='TQQQ', start=start_date, end=end_date)
     df_close_list = df['Close'].values  # 종가
     df_date = pd.to_datetime(df.index, format="%Y-%m-%d")

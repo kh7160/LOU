@@ -49,9 +49,9 @@ def get_next_inc_rate():
 if __name__ == '__main__':
     target = 'TQQQ'
     add_pool = 250
-    start_date = datetime.datetime(2010, 1, 1)
-    end_date = datetime.datetime.now()
-    # end_date = datetime.datetime(2021,10,8)
+    start_date = datetime.datetime(2018, 1, 2)
+    # end_date = datetime.datetime.now()
+    end_date = datetime.datetime(2018,12,31)
     df = fdr.DataReader(symbol='TQQQ', start=start_date, end=end_date)
     df_close_list = df['Close'].values  # 종가
     df_date = pd.to_datetime(df.index, format="%Y-%m-%d")
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
         if tqqq_amt < min_v: # 최소v보다 작을 경우
             rebl_buy_amt = (pool / decimal.Decimal(2)) if (min_v - tqqq_amt) > (pool / decimal.Decimal(2)) else (min_v - tqqq_amt) # rebalancing 금액(반절 넘지 않게)
-            rebl_buy_cnt = math.ceil(rebl_buy_amt / close_price) # rebalancing용 매수 갯수
+            rebl_buy_cnt = math.floor(rebl_buy_amt / close_price) if (min_v - tqqq_amt) > (pool / decimal.Decimal(2)) else math.ceil(rebl_buy_amt / close_price) # rebalancing용 매수 갯수
             print(rebl_buy_amt, rebl_buy_cnt)
             if rebl_buy_cnt > 0 and rebl_buy_amt >= close_price:
                 print('@@@@@@@@@@@@@@@@@ rebalance 매수 @@@@@@@@@@@@@@@@@')
